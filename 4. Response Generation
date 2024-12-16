@@ -1,0 +1,15 @@
+class ResponseGenerator:
+    def __init__(self, llm_model):
+        self.llm_model = llm_model  # Assuming llm_model is initialized elsewhere
+
+    def generate_response(self, retrieved_chunks):
+        context = " ".join(retrieved_chunks)
+        prompt = f"Based on the following information: {context}, please summarize."
+        # Call your LLM here with the prompt
+        response = self.llm_model.generate(prompt)  # Placeholder for actual LLM call
+        return response
+
+# Usage
+response_generator = ResponseGenerator(llm_model)  # Initialize your LLM model here
+response = response_generator.generate_response(retrieved_chunks)
+print("Response:", response)
