@@ -1,0 +1,32 @@
+import os
+import PyPDF2
+from sentence_transformers import SentenceTransformer
+import numpy as np
+import faiss
+
+class PDFDataLoader:
+    def __init__(self, pdf_directory):
+        self.pdf_directory = pdf_directory
+        self.text_chunks = []
+        self.model = SentenceTransformer('all-MiniLM-L6-v2')  # Pre-trained embedding model
+
+    def extract_text(self):
+        for filename in os.listdir(self.pdf_directory):
+            if filename.endswith('.pdf'):
+                with open(os.path.join(self.pdf_directory, filename), 'rb') as file:
+                    reader = PyPDF2.PdfReader(file)
+                    for page in reader.pages:
+                        text = page.extract_text()
+                        if text:
+                            self.text_chunks.extend(self.chunk_text(text))
+
+    def chunk_text(self, text, chunk_size=512):
+        return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
+
+    def embed_chunks(self):
+        return self.model.encode(self.text_chunks)
+
+# Usage
+pdf_loader = PDFDataLoader('path_to_your_pdf_files')
+pdf_loader.extract_text()
+embeddings = pdf_loader.embed_chunks()
