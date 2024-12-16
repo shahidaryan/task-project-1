@@ -1,0 +1,13 @@
+class ComparisonHandler:
+    def __init__(self, rag_pipeline):
+        self.rag_pipeline = rag_pipeline
+
+    def compare(self, terms):
+        results = {}
+        for term in terms:
+            results[term] = self.rag_pipeline.query(term)
+        return results
+
+# Usage
+comparison_handler = ComparisonHandler(rag_pipeline)
+comparison_results = comparison_handler.compare(["Finding A", "Finding B"])
